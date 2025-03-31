@@ -1,8 +1,9 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { writable } from "svelte/store";
   import Toast from "./Toast.svelte";
+  import { messageStatus, visibleToast } from '$lib/stores';
   import "../../app.css";
+
   const dispatch = createEventDispatcher();
 
   const fileInfo: { [key: string]: string } = {
@@ -17,8 +18,7 @@
   };
 
   let file: File | null = null;
-  let message = "";
-  let visibleToast = writable(false);
+
   function handleFileChange(event: Event) {
     const input = document.createElement("input");
     input.type = "file";
@@ -40,7 +40,7 @@
 
       const formData = new FormData();
       if (!file) {
-        message = "File is required";
+        messageStatus.set(3);
         visibleToast.set(true);
         return;
       } else if (
@@ -52,8 +52,7 @@
         fileInfo.language === "" ||
         fileInfo.provider === ""
       ) {
-        message = "Input required info";
-        visibleToast.set(true);
+        messageStatus.set(4);
         return;
       } else {
         formData.append("file", file);
@@ -71,25 +70,25 @@
       });
 
       if (response.ok) {
-        visibleToast.set(true);
+        messageStatus.set(1);
         dispatch("close");
       } else {
-        message = "Upload failed.";
-        visibleToast.set(true);
+        messageStatus.set(1);
       }
     } catch (error) {
-      message = "Error uploading file:";
+      messageStatus.set(2);
+    } finally {
       visibleToast.set(true);
     }
   };
 </script>
 
-<Toast {message} {visibleToast} />
 
-<div class="fixed inset-0 flex items-center justify-center bg-opacity">
-  <div class="bg-white p-6 rounded-sm shadow-lg w-170">
+<div class="fixed inset-0 flex items-center justify-center bg-opacity p-4">
+  <Toast />
+  <div class="bg-white p-6 rounded-sm shadow-lg w-full max-w-170">
     <div class="flex justify-end">
-      <button on:click={() => dispatch("close")} class="flex justify-end">x</button>
+      <button on:click={() => dispatch("close")} class="flex justify-end cursor-pointer">x</button>
     </div>
     <h2 class="text-xl font-semibold mb-4">Upload Resource</h2>
     <input
@@ -148,12 +147,12 @@
       <input
         type="text"
         bind:value={fileInfo.file_path}
-        class="border rounded border-gray-300 w-500"
+        class="border rounded border-gray-300 w-500 p-2"
         readonly
       />
       <button
         on:click={handleFileChange}
-        class="border border-gray-300 text-black px-4 py-1 rounded ml-2 w-80">Select File</button
+        class="border border-gray-300 text-black px-4 py-1 rounded ml-2 w-80 cursor-pointer">Select File</button
       >
     </div>
 
@@ -161,7 +160,7 @@
       <button
         on:click={handleUpload}
         type="button"
-        class="bg-orange-500 text-white px-4 py-2 rounded-lg"
+        class="bg-orange-500 text-white px-4 py-2 rounded-lg cursor-pointer"
       >Upload</button>
     </div>
   </div>

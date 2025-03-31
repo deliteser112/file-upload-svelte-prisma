@@ -4,7 +4,6 @@
   import UploadModal from "../lib/components/UploadModal.svelte";
   import ResourceTable from "../lib/components/ResourceTable.svelte";
   import ViewModal from "../lib/components/ViewModal.svelte";
-  import Toast from "../lib/components/Toast.svelte";
 
   let resources: {
     title: string;
@@ -28,11 +27,8 @@
     view_count: 0,
   };
 
-  let message = "File is successfully uploaded";
-
   const showUploadModal = writable(false);
   const showViewModal = writable(false);
-  const visibleToast = writable(false);
 
   async function fetchFiles() {
     const res = await fetch("/api");
@@ -52,19 +48,20 @@
     const view_number = res.view_count + 1;
     const title_string = res.title;
 
-    const response = await fetch(`/api`, {
+    await fetch(`/api`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title_string, view_number }),
     });
+    
     showViewModal.set(false);
     fetchFiles();
   };
 
-  onMount(fetchFiles);
+  onMount(fetchFiles);  
 </script>
 
-<div class="container">
+<div class="mx-auto sm:px-6 lg:px-8 xl:px-15">
   {#if $showUploadModal}
     <UploadModal on:close={fetchFiles} />
   {/if}
@@ -73,18 +70,9 @@
     <ViewModal {res} on:close={fetchFiles} on:viewFile={viewFile} />
   {/if}
 
-  <Toast {message} {visibleToast}/>
-
   <ResourceTable
     {resources}
     on:openUploadModal={() => showUploadModal.set(true)}
     on:openViewModal={viewContent}
   />
 </div>
-
-<style>
-  .container {
-    padding: 20px 50px;
-    flex: 1;
-  }
-</style>

@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
+	import Toast from "./Toast.svelte";
+	import "../../app.css";
 
 	const dispatch = createEventDispatcher();
-
-	import { onMount } from "svelte";
-	import "../../app.css";
 
 	export let resources: {
 		title: string;
@@ -34,35 +33,32 @@
 		order = -order;
 		resources = resources.sort((a, b) => (a.title > b.title ? order : -order));
 	}
-
-	onMount(async () => {
-		const res = await fetch("/api");
-		resources = await res.json();
-	});
 </script>
 
-<div class="bg-white shadow-[0_0_5px_rgba(0,0,0,0.3)] my-5 rounded-lg font-sans mx-15">
-	<div class="bg-white rounded-lg shadow p-9">
-		<div class="flex flex-col md:flex-row justify-between items-center p-4">
-			<div class="flex items-center space-x-9 border-b text-base font-medium text-gray-500 border-gray-300 w-210">
+
+<div class="bg-white shadow-[0_0_5px_rgba(0,0,0,0.3)] my-5 rounded-lg font-sans mx-10">
+	<Toast />
+	<div class="bg-white rounded-lg shadow p-4 md:p-6 lg:p-9">
+		<div class="flex flex-col lg:flex-row justify-between lg:items-center p-4 gap-4">
+			<div class="flex flex-[1] items-center space-x-9 border-b text-base font-medium text-gray-500 border-gray-300">
 				<img src="/3.png" alt="chart" class="h-6 w-6 mb-2" />
 				<button
 					class="text-gray-800 font-semibold border-b-2 border-blue-500 pb-1"
 				>All</button>
-				<button class="text-gray-500 hover:text-gray-800">Videos</button>
-				<button class="text-gray-500 hover:text-gray-800">Documents</button>
-				<button class="text-gray-500 hover:text-gray-800">Lessons</button>
-				<button class="text-gray-300 cursor-not-allowed">Archive</button>
+				<button class="hidden sm:block text-gray-500 hover:text-gray-800">Videos</button>
+				<button class="hidden sm:block text-gray-500 hover:text-gray-800">Documents</button>
+				<button class="hidden sm:block text-gray-500 hover:text-gray-800">Lessons</button>
+				<button class="hidden sm:block text-gray-300 cursor-not-allowed">Archive</button>
 			</div>
 
-			<div class="flex mt-4 md:mt-0 items-center space-x-3">
+			<div class="sm:flex items-center sm:space-x-3">
 				<div class="flex items-center bg-white border rounded-md text-gray-400">
 					<i class="fa fa-magnifying-glass m-3"></i>
 					<input type="text" placeholder="Field" class="border-none" />
 				</div>
 				<button
 					on:click={() => dispatch("openUploadModal")}
-					class="bg-orange-500 text-white px-4 py-2 text-base rounded-lg"
+					class="w-full mt-2 sm:mt-0 sm:w-auto bg-orange-500 text-white px-4 py-2 text-base rounded-lg cursor-pointer"
 				>Upload</button>
 			</div>
 		</div>
@@ -85,7 +81,7 @@
 				<tbody class="bg-white divide-y divide-gray-300 text-sm text-gray-900">
 					{#each resources as resource, index}
 						<tr
-							class="hover:bg-gray-50"
+							class="hover:bg-gray-50 cursor-pointer"
 							on:click={() => {
 								res = resources[index];
 								dispatch("openViewModal", { res: res });

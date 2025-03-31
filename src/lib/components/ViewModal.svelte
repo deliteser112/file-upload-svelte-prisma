@@ -6,10 +6,10 @@
     export let res;
 </script>
 
-  <div class="fixed inset-0 flex items-center justify-center bg-opacity">
-    <div class="bg-white p-6 rounded-sm shadow-lg w-170">
+  <div class="fixed inset-0 flex items-center justify-center bg-opacity p-4">
+    <div class="bg-white p-6 rounded-sm shadow-lg w-full max-w-170">
       <div class="flex justify-end">
-        <button on:click={() => dispatch('close')}>x</button>
+        <button on:click={() => dispatch('close')} class="cursor-pointer">x</button>
       </div>
       <h2 class="text-xl font-semibold mb-4 border-b border-gray-300">Content</h2>
       <p class="w-full p-2 mb-2 border-b border-gray-300"><b>Title</b>: {res.title}</p>
@@ -23,12 +23,11 @@
         <button
           on:click={() => dispatch("viewFile")}
           type="button"
-          class="bg-orange-500 text-white px-4 py-2 rounded"
+          class="bg-orange-500 text-white px-4 py-2 rounded cursor-pointer"
         >
           View
         </button>
       </div>
     </div>
   </div>
-  
   

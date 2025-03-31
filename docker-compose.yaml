@@ -8,7 +8,7 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgres://postgres:u55902001h@db:5432/postgres
+      - DATABASE_URL="postgresql://neondb_owner:npg_vRsVp2Sm8liu@ep-blue-king-a5macpb1.us-east-2.aws.neon.tech/fileUpload?schema=neondb_owner"
     command: ["npm", "run", "preview"]
     
   db:

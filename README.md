@@ -70,5 +70,5 @@ Before starting, ensure you have the following installed:
 Clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/deliteser112/file-upload-svelte-prisma.git
-cd file-upload-svelte-prisma
+git clone [your-repo-link]
+cd [your-repo-directory]

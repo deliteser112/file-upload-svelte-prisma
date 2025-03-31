@@ -14,7 +14,7 @@
     provider: "",
     role: "",
     view_count: "",
-    file_path: "",
+    file_name: "",
   };
 
   let file: File | null = null;
@@ -26,7 +26,7 @@
       const target = event.target as HTMLInputElement;
       if (target.files && target.files.length > 0) {
         file = target.files[0];
-        fileInfo.file_path = file.name;
+        fileInfo.file_name = file.name;
       }
     };
     input.click();
@@ -53,15 +53,14 @@
         fileInfo.provider === ""
       ) {
         messageStatus.set(4);
+        visibleToast.set(true);
         return;
-      } else {
-        formData.append("file", file);
       }
-
+      
       for (const [key, value] of Object.entries(fileInfo)) {
         formData.append(key, value);
       }
-
+      formData.append("file", file);
       formData.append("view_count", "0");
 
       const response = await fetch("/api", {
@@ -74,10 +73,10 @@
         dispatch("close");
       } else {
         messageStatus.set(1);
+        visibleToast.set(true);
       }
     } catch (error) {
       messageStatus.set(2);
-    } finally {
       visibleToast.set(true);
     }
   };
@@ -146,14 +145,13 @@
     <div class="flex rounded mb-2">
       <input
         type="text"
-        bind:value={fileInfo.file_path}
+        bind:value={fileInfo.file_name}
         class="border rounded border-gray-300 w-500 p-2"
         readonly
       />
       <button
         on:click={handleFileChange}
-        class="border border-gray-300 text-black px-4 py-1 rounded ml-2 w-80 cursor-pointer">Select File</button
-      >
+        class="border border-gray-300 text-black px-4 py-1 rounded ml-2 w-80 cursor-pointer">Select File</button>
     </div>
 
     <div class="flex justify-end">

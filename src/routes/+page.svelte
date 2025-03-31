@@ -5,7 +5,7 @@
   import ResourceTable from "../lib/components/ResourceTable.svelte";
   import ViewModal from "../lib/components/ViewModal.svelte";
 
-  let resources: {
+  type Resource = {
     title: string;
     description: string;
     category: string;
@@ -14,9 +14,12 @@
     role: string;
     file_path: string;
     view_count: number;
-  }[] = [];
+    cloudinary_url: string,
+    cloudinary_public_id: string
+  };
+  let resources: Resource[] = [];
 
-  let res = {
+  let res: Resource = {
     title: "",
     description: "",
     category: "",
@@ -25,6 +28,8 @@
     role: "",
     file_path: "",
     view_count: 0,
+    cloudinary_url: "",
+    cloudinary_public_id: ""
   };
 
   const showUploadModal = writable(false);
@@ -44,7 +49,7 @@
   };
 
   const viewFile = async () => {
-    window.open(`${res.file_path}`, "_blank");
+    window.open(res.cloudinary_url, "_blank");
     const view_number = res.view_count + 1;
     const title_string = res.title;
 
@@ -53,12 +58,12 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title_string, view_number }),
     });
-    
+
     showViewModal.set(false);
     fetchFiles();
   };
 
-  onMount(fetchFiles);  
+  onMount(fetchFiles);
 </script>
 
 <div class="mx-auto sm:px-6 lg:px-8 xl:px-15">

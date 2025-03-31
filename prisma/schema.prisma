@@ -9,14 +9,15 @@ datasource db {
 }
 
 model File {
-  id          Int      @id @default(autoincrement())
-  title       String   @unique
-  description String
-  category    String
-  language    String
-  provider    String
-  role        String
-  file_path   String
-  view_count  Int     @default(0)
-  createdAt   DateTime @default(now())
+  id                    Int      @id @default(autoincrement())
+  title                 String   @unique
+  description           String
+  category              String
+  language              String
+  provider              String
+  role                  String
+  view_count            Int     @default(0)
+  cloudinary_url        String
+  cloudinary_public_id  String
+  createdAt             DateTime @default(now())
 }

@@ -88,7 +88,7 @@
 							}}
 						>
 							<td class="px-4 py-3 whitespace-nowrap">{resource.title}</td>
-							<td class="px-4 py-3 whitespace-nowrap">{resource.file_path}</td>
+							<td class="px-4 py-3 whitespace-nowrap">{resource.role}</td>
 							<td class="px-4 py-3 whitespace-nowrap">{resource.view_count}</td>
 							<td class="px-4 py-3 whitespace-nowrap">aaa@gmail.com</td>
 							<td class="px-4 py-3 whitespace-nowrap">

@@ -16,6 +16,15 @@ Before starting, ensure you have the following installed:
 - Docker
 - PostgreSQL
 
+## Screenings
+
+![1](https://github.com/user-attachments/assets/f5d7441b-1e87-42d6-81f0-92d105818df7)
+
+![2](https://github.com/user-attachments/assets/9fdb70ef-b727-49ff-8ddd-f0e53f2ed481)
+
+![3](https://github.com/user-attachments/assets/1a7fa9c1-7af2-41a6-bae5-e869ff6cc9e5)
+
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:

@@ -1,23 +1,23 @@
-# Use the official Node.js 16 image as a parent image
-FROM node:22-alpine
+# Use an official Node.js image as the base image
+FROM node:18-slim
 
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json (or yarn.lock)
+# Copy the package.json and package-lock.json (or yarn.lock) files into the container
 COPY package*.json ./
 
-# Install dependencies
+# Install the project dependencies
 RUN npm install
 
-# Bundle app source inside Docker image
+# Copy the entire project into the container
 COPY . .
 
-# Build the application
-RUN npm run build
-
-# Expose the port the app runs on
+# Expose the port your app will run on
 EXPOSE 3000
 
-# Command to run the app
+# Build the app for production (if needed)
+RUN npm run build
+
+# Command to run the app when the container starts
 CMD ["npm", "run", "preview"]

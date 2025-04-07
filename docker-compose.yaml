@@ -8,7 +8,7 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL="postgresql://neondb_owner:npg_vRsVp2Sm8liu@ep-blue-king-a5macpb1.us-east-2.aws.neon.tech/fileUpload?schema=neondb_owner"
+      - DATABASE_URL="postgresql://postgres:qweqweqwe@localhost:5432/postgres"
     command: ["npm", "run", "preview"]
     
   db:
@@ -16,7 +16,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: u55902001h
+      POSTGRES_PASSWORD: qweqweqwe
       POSTGRES_DB: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data

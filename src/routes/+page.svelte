@@ -49,7 +49,7 @@
   };
 
   const viewFile = async () => {
-    window.open(res.cloudinary_url, "_blank");
+    window.open(res.file_path, "_blank");
     const view_number = res.view_count + 1;
     const title_string = res.title;
 

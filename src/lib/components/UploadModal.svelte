@@ -1,18 +1,37 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import Select from 'svelte-select';
   import Toast from "./Toast.svelte";
   import { messageStatus, visibleToast } from '$lib/stores';
   import "../../app.css";
 
-  const dispatch = createEventDispatcher();
+  type Option = { label: string; value: string };
 
-  const fileInfo: { [key: string]: string } = {
+  const dispatch = createEventDispatcher();
+  const messageDec = {
+    Success: 0,
+    UploadFailed: 1,
+    ErrorUploading: 2,
+    SelectFile: 3,
+    InputField: 4
+  }
+  
+  const fileInfo: {
+    title: string;
+    description: string;
+    category: string;
+    language: string;
+    provider: string;
+    role: string[];
+    view_count: string;
+    file_name: string;
+  } = {
     title: "",
     description: "",
     category: "",
     language: "",
     provider: "",
-    role: "",
+    role: [],
     view_count: "",
     file_name: "",
   };
@@ -40,7 +59,7 @@
 
       const formData = new FormData();
       if (!file) {
-        messageStatus.set(3);
+        messageStatus.set(messageDec.SelectFile);
         visibleToast.set(true);
         return;
       } else if (
@@ -52,14 +71,15 @@
         fileInfo.language === "" ||
         fileInfo.provider === ""
       ) {
-        messageStatus.set(4);
+        messageStatus.set(messageDec.InputField);
         visibleToast.set(true);
         return;
       }
       
       for (const [key, value] of Object.entries(fileInfo)) {
-        formData.append(key, value);
+        formData.append(key, value.toString());
       }
+
       formData.append("file", file);
       formData.append("view_count", "0");
 
@@ -69,17 +89,23 @@
       });
 
       if (response.ok) {
-        messageStatus.set(1);
+        messageStatus.set(messageDec.Success);
         dispatch("close");
       } else {
-        messageStatus.set(1);
+        messageStatus.set(messageDec.UploadFailed);
         visibleToast.set(true);
       }
     } catch (error) {
-      messageStatus.set(2);
+      messageStatus.set(messageDec.ErrorUploading);
       visibleToast.set(true);
     }
   };
+
+  const handleSelect = (event: CustomEvent<Option[]>) => {
+    event.detail.forEach(element => {
+      if(!fileInfo.role.includes(element.value)) fileInfo.role.push(element.value)
+    });
+  }
 </script>
 
 
@@ -131,16 +157,10 @@
       <option value="Pack">Pack</option>
       <option value="Mentor">Mentor</option>
     </select>
-
-    <select
-      bind:value={fileInfo.role}
-      class="w-full border border-gray-300 rounded p-2 mb-2"
-    >
-      <option value="" disabled hidden>Role</option>
-      <option value="">None</option>
-      <option value="Mentor/Coach">Mentor/Coach</option>
-      <option value="Mentee/Coachee">Mentee/Coachee</option>
-    </select>
+    
+    <div class="mb-2">
+      <Select on:select={handleSelect} id="languages" items={['Mentor/Coach', 'Mentee/Coachee']} isMulti={true} placeholder="Role"></Select>
+    </div>
 
     <div class="flex rounded mb-2">
       <input

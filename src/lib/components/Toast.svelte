@@ -27,7 +27,7 @@
 <style>
   .toast {
     position: fixed;
-    top: 50px;
+    top: 30px;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgb(255, 255, 255);

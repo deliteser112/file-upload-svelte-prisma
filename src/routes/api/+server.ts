@@ -1,12 +1,7 @@
 import { json } from '@sveltejs/kit';
+import fs from 'fs/promises';
+import path from 'path';
 import { PrismaClient } from '@prisma/client';
-import { v2 as cloudinary } from 'cloudinary';
-
-cloudinary.config({
-	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-	api_key: process.env.CLOUDINARY_API_KEY,
-	api_secret: process.env.CLOUDINARY_API_SECRET
-});
 
 const prisma = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] });
 
@@ -20,6 +15,7 @@ export async function GET() {
 }
 
 export async function POST({ request }) {
+	console.log("asdf");
 	try {
 		const formData = await request.formData();
 		const file = formData.get('file') as File;
@@ -28,40 +24,33 @@ export async function POST({ request }) {
 		const category = formData.get('category') as string;
 		const language = formData.get('language') as string;
 		const provider = formData.get('provider') as string;
-		const role = formData.get('role') as string;
+		const role = formData.getAll('role') as string[];
 
 		if (!file) return new Response('No file', { status: 400 });
 
 		const file_check = await prisma.file.findUnique({where: { title: title }});
 		if (file_check !== null) return new Response('Same file exist', { status: 400 });
+		
+		const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const uploadDir = path.resolve('static/uploads');
 
-		const buffer = Buffer.from(await file.arrayBuffer());
+        await fs.mkdir(uploadDir, { recursive: true });
+        const filePath = path.join(uploadDir, file.name);
+        await fs.writeFile(filePath, buffer);
 
-		const result = await new Promise((resolve, reject) => {
-			cloudinary.uploader.upload_stream(
-				{
-					folder: 'fileUpload',
-					use_filename: true,
-					unique_filename: true,
-					resource_type: 'auto',
-				},
-				(err, res) => (err ? reject(err) : resolve(res))
-			).end(buffer);
-		});
-
-		const savedFile = await prisma.file.create({
-			data: {
-				title: title,
-				description: description,
-				category: category,
-				language: language,
-				provider: provider,
-				role: role,
-				view_count: 0,
-				cloudinary_url: result.secure_url,
-				cloudinary_public_id: result.public_id
-			}
-		});
+        const savedFile = await prisma.file.create({
+            data: {
+                title: title,
+                description: description,
+                category: category,
+                language: language,
+                provider: provider,
+                role: role,
+                file_path: `/uploads/${file.name}`,
+                view_count: 0,
+            }
+        });
 
 		return json(savedFile);
 	} catch (err) {

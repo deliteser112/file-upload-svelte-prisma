@@ -8,7 +8,7 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL="postgresql://postgres:qweqweqwe@localhost:5432/postgres"
+      - DATABASE_URL="postgresql://postgres:root@localhost:5432/postgres"
     command: ["npm", "run", "preview"]
     
   db:
@@ -16,7 +16,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: qweqweqwe
+      POSTGRES_PASSWORD: root
       POSTGRES_DB: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data

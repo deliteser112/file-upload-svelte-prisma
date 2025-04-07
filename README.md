@@ -56,16 +56,20 @@ Before starting, ensure you have the following installed:
 ### Running the Project Locally
 
 Use the following command:
-
+```
 npm run dev -- --host
-
+```
 ### Build the Image
 
+```
 docker build -t sveltekit-app .
+```
 
 ### Run the Container
 
+```
 docker run -p 3000:3000 sveltekit-app
+```
 
 ### Clone the Project
 
